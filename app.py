@@ -1,9 +1,9 @@
 import os
-from bs4 import BeautifulSoup, UnicodeDammit
+from bs4 import BeautifulSoup
 import re
 import csv
 import operator
-
+import timeit
 
 def sort_dict_by_key(unsorted_dict):
     sorted_keys = sorted(unsorted_dict.keys(), key=lambda x: x.lower())
@@ -16,11 +16,18 @@ def sort_dict_by_key(unsorted_dict):
 
 
 if __name__ == '__main__':
+    #start timer
+    start = timeit.default_timer()
+
     files = os.listdir("html_files")
     numOfFiles = len(files)
     wordList = dict()
     numbers = '0123456789'
+
+    #counter is for calculating different times for different number of files
+    # counter = 0
     for x in files:
+        # counter += 1
         currFile = "html_files/" + x
 
         # opens file and stripes html
@@ -47,6 +54,8 @@ if __name__ == '__main__':
             else:
                 # Add the word to dictionary with count 1
                 wordList[y] = 1
+        # if counter == 250:
+        #     break
 
     sortedNum = dict(sorted(wordList.items(), key=operator.itemgetter(1), reverse=True))
     w = csv.writer(open("quantity.csv", "w"))
@@ -57,3 +66,5 @@ if __name__ == '__main__':
     z = csv.writer(open("alphabetical.csv", "w"))
     for key, val in sortedAlpha.items():
         z.writerow([key, val])
+
+    print(timeit.default_timer()-start)
